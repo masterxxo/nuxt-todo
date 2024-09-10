@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useTodoStore = defineStore('todo', () => {
   const todos = ref<Todo[]>([])
+  const tasksLoaded = ref(false);
 
   async function fetchTodos() {
     const { data } = await useFetch('http://51.83.230.116:9000/tasks')
@@ -10,8 +11,8 @@ export const useTodoStore = defineStore('todo', () => {
     for (let i = 0; i < todos.value.length; i++) {
       const subtasks = await fetchSubtasks(todos.value[i]);
       todos.value[i].subtasks = subtasks
-      todos.value[i].subtasksLoaded = true
     }
+    tasksLoaded.value = true;
   }
 
   async function fetchSubtasks(todo: Todo) {
@@ -35,6 +36,7 @@ export const useTodoStore = defineStore('todo', () => {
 
   return {
     todos,
+    tasksLoaded,
     fetchTodos,
   }
 })

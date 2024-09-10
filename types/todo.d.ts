@@ -3,7 +3,7 @@ declare interface Todo {
   title: string
   completed: boolean
   subtasks: Subtask[] | string[]
-  subtasksLoaded?: boolean
+  subtasksVisible?: boolean
 }
 
 declare interface Subtask {
