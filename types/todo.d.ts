@@ -1,13 +1,14 @@
 declare interface Todo {
   id: number
   title: string
-  completed: boolean
-  subtasks: Subtask[] | string[]
-  subtasksVisible?: boolean
+  done: boolean
+  subtasks: string[]
+  children?: Subtask[]
+  subtasksVisible: boolean
 }
 
 declare interface Subtask {
   id: number
   title: string
-  completed: boolean
+  done: boolean
 }

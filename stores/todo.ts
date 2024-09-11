@@ -7,11 +7,13 @@ export const useTodoStore = defineStore('todo', () => {
   async function fetchTodos() {
     const { data } = await useFetch('http://51.83.230.116:9000/tasks')
     todos.value = data.value as Todo[]
+    
 
     for (let i = 0; i < todos.value.length; i++) {
-      const subtasks = await fetchSubtasks(todos.value[i]);
-      todos.value[i].subtasks = subtasks
+      todos.value[i].subtasksVisible = false;
+      todos.value[i].children = await fetchSubtasks(todos.value[i]);
     }
+
     tasksLoaded.value = true;
   }
 
@@ -34,9 +36,14 @@ export const useTodoStore = defineStore('todo', () => {
     return subtasks
   }
 
+  function updateSubtask(todo: Todo) {
+    todo.done = todo.children?.every(child => child.done) ?? false
+  }
+
   return {
     todos,
     tasksLoaded,
     fetchTodos,
+    updateSubtask
   }
 })
