@@ -3,9 +3,10 @@ import { defineStore } from 'pinia'
 export const useTodoStore = defineStore('todo', () => {
   const todos = ref<Todo[]>([])
   const tasksLoaded = ref(false);
+  const config = useRuntimeConfig()
 
   async function fetchTodos() {
-    const { data } = await useFetch('http://51.83.230.116:9000/tasks')
+    const { data } = await useFetch('/tasks', { baseURL: config.public.baseURL })
     todos.value = data.value as Todo[]
     
 
@@ -21,7 +22,7 @@ export const useTodoStore = defineStore('todo', () => {
     const subtasks: Subtask[] = []
 
     for (const subtask of todo.subtasks) {
-      const { data } = await useFetch(`http://51.83.230.116:9000/subtasks/${subtask}`)
+      const { data } = await useFetch(`/subtasks/${subtask}`, { baseURL: config.public.baseURL })
       if (data.value) {
         subtasks.push(data.value as Subtask)
       }
@@ -37,7 +38,9 @@ export const useTodoStore = defineStore('todo', () => {
   }
 
   function updateSubtask(todo: Todo) {
-    todo.done = todo.children?.every(child => child.done) ?? false
+    if(todo.done === false) {
+      todo.done = todo.children?.every(child => child.done) ?? false
+    }
   }
 
   return {
